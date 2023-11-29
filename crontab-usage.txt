@@ -1,0 +1,9 @@
+This note is for crontab usage
+
+It is automatically using bash environment. So, all I had to do was put the correct path to the file.
+
+To separate the directories, use /. To separate the spaces, use \.
+
+Best,
+
+Kiman Park
