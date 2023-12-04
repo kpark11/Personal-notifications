@@ -90,10 +90,18 @@ def getWeather(path):
     
     return report
 
+def get_credential():
+    with open("credential.txt", 'r') as file:
+        parts = file.read()
+    credential = parts.split(",")
+    return credential
+        
+
+
 def send_email_via_email(
     receiver: str,
     message: str,
-    sender_credentials: tuple,
+    sender_credentials: list,
     subject: str,
 
 ):
@@ -101,8 +109,8 @@ def send_email_via_email(
     smtp_server = "smtp.gmail.com"
     smtp_port = 465
     
-    sender_email, email_password = sender_credentials
-    
+    sender_email = sender_credentials[0]
+    email_password = sender_credentials[1]
     ################################################################
     msg = MIMEMultipart()
     msg['Subject'] = subject
@@ -140,12 +148,11 @@ def main():
     receiver = "kimanpark33@gmail.com"
     receiver1 = "carpenter.abby25@gmail.com"
 
-    sender_credentials = ("kimanpark33@gmail.com", "byab pntv aygn eqbo")
-    
+    sender_credentials = get_credential()    
     try:
         #Email
         send_email_via_email(receiver, message, sender_credentials,'Weather Report')
-        send_email_via_email(receiver1, message, sender_credentials,'Weather Report')
+        #send_email_via_email(receiver1, message, sender_credentials,'Weather Report')
         print('\n')
         print('Email Sent!')
 
