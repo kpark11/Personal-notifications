@@ -5,40 +5,51 @@ Created on Fri Oct 13 01:12:40 2023
 @author: brian
 """
 import email, smtplib, ssl
-
-# used for MMS
-from email import encoders
-from email.parser import Parser
-from email.policy import default
-
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.application import MIMEApplication
+from os.path import basename
 
 import requests
 from bs4 import BeautifulSoup
-import json
+
+import matplotlib.pyplot as plt
+
+
 
 path = "https://weather.com/weather/tenday/l/Knoxville+TN?canonicalCityId=626ef612d09792fa3f39bfb5ad2b6808faf39bd6c597c5d8c7301e27cec2ed4a"
 
 
 def getWeather(path):
     x = requests.get(path)
-    soup = BeautifulSoup(x.content, 'html5lib')
+    soup = BeautifulSoup(x.content, 'html.parser')
                 
     content = []
+    cont_day = []
+    cont_temp = []
+    cont_rain = []
     for i in range(20):        
         content_day = soup.find_all("div",{"data-testid":"DailyContent"})[i]
         line1 = '------------------------------------------------------' + '\n'
         
         time = content_day.find('h3').text
         line2 = f'{time}\n'
+        cont_day.append(time)
         
         
         temp = content_day.find('span',{'data-testid':'TemperatureValue'}).text
         line3 = '------' + '\n'
         line5 = f'Temperature: {temp}'.format(temp=temp) + '\n'
+        temp_num = temp[:-1]
+        temp_num = int(temp_num)
+        cont_temp.append(temp_num)
         
         precipitation = content_day.find('span',{'class':'DailyContent--value--1Jers'}).text
         line6 = '------' + '\n'
         line7 = 'Precipitation percentage (if not, Wind): {precipitation}'.format(precipitation=precipitation) + '\n'
+        prec_num = precipitation[:-1]
+        prec_num = int(prec_num)
+        cont_rain.append(prec_num)
         
         summary = content_day.find('p',{'data-testid':'wxPhrase'}).text
         line9 = '------' + '\n'
@@ -50,47 +61,96 @@ def getWeather(path):
         content.append(holy)
     
     report = ''.join(content).strip()
+    
+    
+    
+    ###############################################
+    fig, ax = plt.subplots(figsize=(14, 7))
+    ax.plot(cont_day,cont_temp,marker='o',markersize=15,mfc ='r')
+    fig.autofmt_xdate(rotation=45)
+    ax.set_ylabel('Temperature',fontsize=20)
+    ax.tick_params(axis='x', labelsize=15)
+    ax.tick_params(axis='y', labelsize=15)
+    
+    plt.savefig('temp.png', format='png')
+
+    ###############################################
+    
+    fig, ax = plt.subplots(figsize=(14, 7))
+    ax.plot(cont_day,cont_rain,marker='o',markersize=15,mfc ='r')
+    fig.autofmt_xdate(rotation=45)
+    ax.set_ylabel('Rain (%)',fontsize=20)
+    ax.tick_params(axis='x', labelsize=15)
+    ax.tick_params(axis='y', labelsize=15)
+    
+    plt.savefig('rain.png', format='png')
+    
+    ###############################################
+        
+    
     return report
 
 def send_email_via_email(
     receiver: str,
     message: str,
     sender_credentials: tuple,
-    subject: str = "sent using etext",
-    smtp_server: str = "smtp.gmail.com",
-    smtp_port: int = 465,
+    subject: str,
+
 ):
+
+    smtp_server = "smtp.gmail.com"
+    smtp_port = 465
+    
     sender_email, email_password = sender_credentials
-    receiver_email = receiver
+    
+    ################################################################
+    msg = MIMEMultipart()
+    msg['Subject'] = subject
+    msg['From'] = sender_email
+    msg['To'] = receiver
+    msg.attach(MIMEText(message))
+    ################################################################
         
-    'From: {}\r\nTo: {}\r\nSubject: {}\r\n\r\n{}'
-    email_message = f"From: {sender_email}\r\nTo: {receiver}\r\nSubject: {subject}\r\n\r\n{message}".format(sender_email=sender_email,receiver=receiver,subject=subject,message=message)
+
+    # Now add the related image to the html part.
+    with open("temp.png", 'rb') as img:
+        part = MIMEApplication(img.read(),Name=basename("temp.png"))
+    part['Content-Disposition'] = 'attachment; filename="%s"' % basename("temp.png")
+    msg.attach(part)
+    
+    with open("rain.png", 'rb') as img:
+        part = MIMEApplication(img.read(),Name=basename("rain.png"))
+    part['Content-Disposition'] = 'attachment; filename="%s"' % basename("rain.png")
+    msg.attach(part)
     
     
     with smtplib.SMTP_SSL(
         smtp_server, smtp_port, context=ssl.create_default_context()
     ) as email:
         email.login(sender_email, email_password)
-        email.sendmail(sender_email, receiver_email, email_message.encode('utf-8'))
+        #email.sendmail(sender_email, receiver_email, email_message.encode('utf-8'))
+        email.sendmail(sender_email,receiver,msg.as_string())
+
 
 
 def main():
     
-    text = getWeather(path)
+    message = getWeather(path)
 
     receiver = "kimanpark33@gmail.com"
     receiver1 = "carpenter.abby25@gmail.com"
-    message = text
 
     sender_credentials = ("kimanpark33@gmail.com", "byab pntv aygn eqbo")
     
     try:
         #Email
-        send_email_via_email(receiver, message, sender_credentials,subject='Weather Report')
-        send_email_via_email(receiver1, message, sender_credentials,subject='Weather Report')
+        send_email_via_email(receiver, message, sender_credentials,'Weather Report')
+        send_email_via_email(receiver1, message, sender_credentials,'Weather Report')
+        print('\n')
         print('Email Sent!')
 
     except:
+        print('\n')
         print('error')        
     
     
