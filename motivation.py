@@ -11,21 +11,40 @@ from email.mime.text import MIMEText
 
 import requests
 from bs4 import BeautifulSoup
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service as ChromeService # Similar thing for firefox also!
+from subprocess import CREATE_NO_WINDOW # This flag will only be available in windows
 
+import random
 
+i = random.randint(5,20)
+ii = random.randint(5,20)
 
+path_fortune = "http://www.fortunecookiemessage.com/"
 
-path = "http://www.fortunecookiemessage.com/"
+path_motivation = "https://www.brainyquote.com/topics/motivational-quotes"
 
-def getFortune(path):
-    x = requests.get(path)
+def getFortune(path_fortune):
+    x = requests.get(path_fortune)
     soup = BeautifulSoup(x.content, 'html.parser')
     fortune = soup.find("div",{"class":"quote"}).text
     print(fortune)
-        
     
     return fortune
 
+def getMotivation(path_motivation,i):
+    chrome_service = ChromeService()
+    chrome_service.creation_flags = CREATE_NO_WINDOW
+    dr = webdriver.Chrome(service=chrome_service)
+    dr.get(path_motivation)
+    bs = BeautifulSoup(dr.page_source,"lxml")
+    
+    motivation = bs.find_all("div",{"style":"display: flex;justify-content: space-between"})
+    author = bs.find_all("a",{"title":"view author"})
+    motivation = motivation[i].text
+    author = author[i].text
+    
+    return motivation + '\n' + 'Author: {author}'.format(author=author)
 
 def send_email_via_email(
     receiver: str,
@@ -61,8 +80,11 @@ def send_email_via_email(
 
 def main():
     
-    message = getFortune(path)
-    message1 = getFortune(path)
+    #message = getFortune(path_fortune)
+    #message1 = getFortune(path_fortune)
+    
+    message = getMotivation(path_motivation,i)
+    message1 = getMotivation(path_motivation,ii)
 
 
     receiver = "kimanpark33@gmail.com"
@@ -72,8 +94,10 @@ def main():
     
     try:
         #Email
-        send_email_via_email(receiver, message, sender_credentials,'Fortune for the day')
-        send_email_via_email(receiver1, message1, sender_credentials,'Fortune for the day')
+        #send_email_via_email(receiver, message, sender_credentials,'Fortune for the day')
+        #send_email_via_email(receiver1, message1, sender_credentials,'Fortune for the day')
+        send_email_via_email(receiver, message, sender_credentials,'Motivational speech for the day')
+        send_email_via_email(receiver1, message1, sender_credentials,'Motivational speech for the day')
         print('\n')
         print('Email Sent!')
 

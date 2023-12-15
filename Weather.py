@@ -68,7 +68,7 @@ def getWeather(path):
     fig, ax = plt.subplots(figsize=(14, 7))
     ax.plot(cont_day,cont_temp,marker='o',markersize=15,mfc ='r')
     fig.autofmt_xdate(rotation=45)
-    ax.set_ylabel('Temperature',fontsize=20)
+    ax.set_ylabel(r'Temperature ($^o$F)',fontsize=20)
     ax.tick_params(axis='x', labelsize=15)
     ax.tick_params(axis='y', labelsize=15)
     
