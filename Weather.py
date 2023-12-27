@@ -152,7 +152,7 @@ def main():
     try:
         #Email
         send_email_via_email(receiver, message, sender_credentials,'Weather Report')
-        #send_email_via_email(receiver1, message, sender_credentials,'Weather Report')
+        send_email_via_email(receiver1, message, sender_credentials,'Weather Report')
         print('\n')
         print('Email Sent!')
 

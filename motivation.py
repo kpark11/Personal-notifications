@@ -17,8 +17,7 @@ from subprocess import CREATE_NO_WINDOW # This flag will only be available in wi
 
 import random
 
-i = random.randint(5,20)
-ii = random.randint(5,20)
+
 
 path_fortune = "http://www.fortunecookiemessage.com/"
 
@@ -32,17 +31,22 @@ def getFortune(path_fortune):
     
     return fortune
 
-def getMotivation(path_motivation,i):
-    chrome_service = ChromeService()
-    chrome_service.creation_flags = CREATE_NO_WINDOW
-    dr = webdriver.Chrome(service=chrome_service)
-    dr.get(path_motivation)
-    bs = BeautifulSoup(dr.page_source,"lxml")
-    
-    motivation = bs.find_all("div",{"style":"display: flex;justify-content: space-between"})
-    author = bs.find_all("a",{"title":"view author"})
-    motivation = motivation[i].text
-    author = author[i].text
+def getMotivation(path_motivation):
+    try:
+        chrome_service = ChromeService()
+        chrome_service.creation_flags = CREATE_NO_WINDOW
+        dr = webdriver.Chrome(service=chrome_service)
+        dr.get(path_motivation)
+        bs = BeautifulSoup(dr.page_source,"lxml")
+        
+        i = random.randint(5,20)
+        
+        motivation = bs.find_all("div",{"style":"display: flex;justify-content: space-between"})
+        author = bs.find_all("a",{"title":"view author"})
+        motivation = motivation[i].text
+        author = author[i].text
+    except:
+        getMotivation("https://www.brainyquote.com/topics/motivational-quotes")
     
     return motivation + '\n' + 'Author: {author}'.format(author=author)
 
@@ -83,8 +87,8 @@ def main():
     #message = getFortune(path_fortune)
     #message1 = getFortune(path_fortune)
     
-    message = getMotivation(path_motivation,i)
-    message1 = getMotivation(path_motivation,ii)
+    message = getMotivation(path_motivation)
+    message1 = getMotivation(path_motivation)
 
 
     receiver = "kimanpark33@gmail.com"
