@@ -37,7 +37,7 @@ def getMotivation(path_motivation):
         chrome_service.creation_flags = CREATE_NO_WINDOW
         dr = webdriver.Chrome(service=chrome_service)
         dr.get(path_motivation)
-        bs = BeautifulSoup(dr.page_source,"lxml")
+        bs = BeautifulSoup(dr.page_source,"html.parser")
         
         i = random.randint(5,20)
         
