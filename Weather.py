@@ -9,6 +9,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.application import MIMEApplication
 from os.path import basename
+import numpy as np
 
 import requests
 from bs4 import BeautifulSoup
@@ -69,6 +70,14 @@ def getWeather(path):
     ax.plot(cont_day,cont_temp,marker='o',markersize=15,mfc ='r')
     fig.autofmt_xdate(rotation=45)
     ax.set_ylabel(r'Temperature ($^o$F)',fontsize=20)
+    
+    major_ticks = np.arange(0, 111, 10)
+    minor_ticks = np.arange(0, 111, 5)
+    
+    ax.set_yticks(major_ticks)
+    ax.set_yticks(minor_ticks, minor=True)
+    ax.set_ylim(0,110)
+    ax.grid(True)
     ax.tick_params(axis='x', labelsize=15)
     ax.tick_params(axis='y', labelsize=15)
     
@@ -80,6 +89,8 @@ def getWeather(path):
     ax.plot(cont_day,cont_rain,marker='o',markersize=15,mfc ='r')
     fig.autofmt_xdate(rotation=45)
     ax.set_ylabel('Rain (%)',fontsize=20)
+    ax.set_ylim(-10,110)
+    ax.grid(True)
     ax.tick_params(axis='x', labelsize=15)
     ax.tick_params(axis='y', labelsize=15)
     

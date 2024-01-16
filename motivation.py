@@ -9,11 +9,12 @@ import email, smtplib, ssl
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
+
 import requests
+from requests_html import HTMLSession
 from bs4 import BeautifulSoup
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service as ChromeService # Similar thing for firefox also!
-from subprocess import CREATE_NO_WINDOW # This flag will only be available in windows
+from selenium.webdriver.chrome.options import Options
 
 import random
 
@@ -33,22 +34,44 @@ def getFortune(path_fortune):
 
 def getMotivation(path_motivation):
     try:
-        chrome_service = ChromeService()
-        chrome_service.creation_flags = CREATE_NO_WINDOW
-        dr = webdriver.Chrome(service=chrome_service)
+        """
+        This is for the spyder, which where Selenium works
+        """
+        # chrome_options = Options()
+        # chrome_options.add_argument("--disable-extensions")
+        # chrome_options.add_argument("--disable-gpu")
+        # chrome_options.add_argument("--no-sandbox") # linux only
+        # chrome_options.add_argument("--headless=new") # for Chrome >= 109
+        # chrome_options.add_argument("--enable-javascript")
+        # "headless" option does not work for this website
+        # dr = webdriver.Chrome(options=chrome_options)
+        dr = webdriver.Chrome()
+        dr.minimize_window()
         dr.get(path_motivation)
         bs = BeautifulSoup(dr.page_source,"html.parser")
-        
-        i = random.randint(5,20)
-        
+
+        i = random.randint(5,10)
         motivation = bs.find_all("div",{"style":"display: flex;justify-content: space-between"})
         author = bs.find_all("a",{"title":"view author"})
         motivation = motivation[i].text
         author = author[i].text
+        print(motivation)
+        print(author)
+
+        
+        return motivation + '\n' + 'Author: {author}'.format(author=author)
+        
     except:
-        getMotivation("https://www.brainyquote.com/topics/motivational-quotes")
+        """
+        The selenium does not work and the website prevents any scraping without javascript and cookies.
+        So fortune has to do. 
+        """
+        fortune = getFortune(path_fortune)
+        
+        return fortune
+        
     
-    return motivation + '\n' + 'Author: {author}'.format(author=author)
+
 
 def send_email_via_email(
     receiver: str,
