@@ -33,7 +33,7 @@ def getWeather(path):
         content_day = soup.find_all("div",{"data-testid":"DailyContent"})[i]
         line1 = '------------------------------------------------------' + '\n'
         
-        time = content_day.find('h3').text
+        time = content_day.find('h2').text
         line2 = f'{time}\n'
         cont_day.append(time)
         
