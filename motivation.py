@@ -123,8 +123,8 @@ def main():
         #Email
         #send_email_via_email(receiver, message, sender_credentials,'Fortune for the day')
         #send_email_via_email(receiver1, message1, sender_credentials,'Fortune for the day')
-        send_email_via_email(receiver, message, sender_credentials,'Motivational speech for the day')
-        send_email_via_email(receiver1, message1, sender_credentials,'Motivational speech for the day')
+        #send_email_via_email(receiver, message, sender_credentials,'Motivational speech for the day')
+        #send_email_via_email(receiver1, message1, sender_credentials,'Motivational speech for the day')
         print('\n')
         print('Email Sent!')
 
