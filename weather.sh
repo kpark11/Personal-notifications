@@ -4,4 +4,4 @@
 cd '/mnt/c/Users/brian/OneDrive - University of Tennessee/Desktop/Research/Python program/Personal-notifications'
 
 # Run the Python script
-python3 Weather.py
+python Weather.py
