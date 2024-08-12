@@ -24,7 +24,7 @@ path = "https://weather.com/weather/tenday/l/Knoxville+TN?canonicalCityId=626ef6
 def getWeather(path):
     x = requests.get(path)
     soup = BeautifulSoup(x.content, 'html.parser')
-                
+    
     content = []
     cont_day = []
     cont_temp = []
@@ -49,7 +49,12 @@ def getWeather(path):
         line6 = '------' + '\n'
         line7 = 'Precipitation percentage (if not, Wind): {precipitation}'.format(precipitation=precipitation) + '\n'
         prec_num = precipitation[:-1]
-        prec_num = int(prec_num)
+        print(precipitation)
+        try:
+            prec_num = int(prec_num)
+        except ValueError:
+            prec_num = 0
+        
         cont_rain.append(prec_num)
         
         summary = content_day.find('p',{'data-testid':'wxPhrase'}).text
@@ -159,7 +164,7 @@ def main():
     receiver = "kimanpark33@gmail.com"
     receiver1 = "carpenter.abby25@gmail.com"
 
-    sender_credentials = get_credential()    
+    sender_credentials = get_credential()
     try:
         #Email
         send_email_via_email(receiver, message, sender_credentials,'Weather Report')
