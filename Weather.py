@@ -18,8 +18,6 @@ import matplotlib.pyplot as plt
 
 
 
-path = "https://weather.com/weather/tenday/l/Knoxville+TN?canonicalCityId=626ef612d09792fa3f39bfb5ad2b6808faf39bd6c597c5d8c7301e27cec2ed4a"
-
 
 def getWeather(path):
     x = requests.get(path)
@@ -45,7 +43,7 @@ def getWeather(path):
         temp_num = int(temp_num)
         cont_temp.append(temp_num)
         
-        precipitation = content_day.find('span',{'class':'DailyContent--value--1Jers'}).text
+        precipitation = content_day.find('span',{'data-testid':'PercentageValue'}).text
         line6 = '------' + '\n'
         line7 = 'Precipitation percentage (if not, Wind): {precipitation}'.format(precipitation=precipitation) + '\n'
         prec_num = precipitation[:-1]
@@ -157,20 +155,27 @@ def send_email_via_email(
 
 
 
+Knox_path = "https://weather.com/weather/tenday/l/Knoxville+TN?canonicalCityId=626ef612d09792fa3f39bfb5ad2b6808faf39bd6c597c5d8c7301e27cec2ed4a"
+Hosch_path = "https://weather.com/weather/tenday/l/5045bdcbf6598772976f065c7b985bc9cd9debf133488de3e480c4ea77345d59"
+
+
+
 def main():
     
-    message = getWeather(path)
+    message = getWeather(Knox_path)
+    message1 = getWeather(Hosch_path)
 
     receiver = "kimanpark33@gmail.com"
-    receiver1 = "carpenter.abby25@gmail.com"
 
     sender_credentials = get_credential()
     try:
         #Email
         send_email_via_email(receiver, message, sender_credentials,'Weather Report')
-        send_email_via_email(receiver1, message, sender_credentials,'Weather Report')
         print('\n')
-        print('Email Sent!')
+        print('Knoxville Email Sent!')
+        send_email_via_email(receiver, message1, sender_credentials,'Weather Report')
+        print('\n')
+        print('Hoschton Email Sent!')
 
     except:
         print('\n')
