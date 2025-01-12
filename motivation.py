@@ -85,7 +85,11 @@ def send_email_via_email(
         email.sendmail(sender_email,receiver,msg.as_string())
 
 
-
+def get_credential():
+    with open("credential.txt", 'r') as file:
+        parts = file.read()
+    credential = parts.split(",")
+    return credential
 
 
 def main():
@@ -94,7 +98,7 @@ def main():
 
     receiver = "kimanpark33@gmail.com"
 
-    sender_credentials = ("kimanpark33@gmail.com", "byab pntv aygn eqbo")
+    sender_credentials = get_credential()
     
     try:
         #Email
