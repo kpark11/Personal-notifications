@@ -69,7 +69,6 @@ def send_email_via_email(
     pics = [x for x in os.listdir() if x.split('.')[-1].lower() in valid]
     pic = random.choices(pics)[0]
     
-    print(pic)
     with open(pic, 'rb') as img:
         part = MIMEApplication(img.read(),Name=basename(pic))
     part['Content-Disposition'] = 'attachment; filename="%s"' % basename(pic)
