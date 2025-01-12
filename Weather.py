@@ -10,6 +10,7 @@ from email.mime.text import MIMEText
 from email.mime.application import MIMEApplication
 from os.path import basename
 import numpy as np
+import os
 
 import requests
 from bs4 import BeautifulSoup
@@ -47,7 +48,7 @@ def getWeather(path):
         line6 = '------' + '\n'
         line7 = 'Precipitation percentage (if not, Wind): {precipitation}'.format(precipitation=precipitation) + '\n'
         prec_num = precipitation[:-1]
-        print(precipitation)
+        #print(precipitation)
         try:
             prec_num = int(prec_num)
         except ValueError:
@@ -61,7 +62,7 @@ def getWeather(path):
 
         line12 = '\n'
         holy = line1+line2+line3+line5+line6+line7+line9+line10+line12
-        print(holy)
+        #print(holy)
         content.append(holy)
     
     report = ''.join(content).strip()
@@ -170,21 +171,32 @@ def main():
     sender_credentials = get_credential()
     try:
         #Email
-        send_email_via_email(receiver, message, sender_credentials,'Weather Report')
+        send_email_via_email(receiver, message, sender_credentials,'Knoxville TN Weather Report')
         print('\n')
         print('Knoxville Email Sent!')
-        send_email_via_email(receiver, message1, sender_credentials,'Weather Report')
+        send_email_via_email(receiver, message1, sender_credentials,'Hoschton GA Weather Report')
         print('\n')
         print('Hoschton Email Sent!')
+        
 
     except:
         print('\n')
         print('error')        
     
+    if os.path.exists("temp.png"):
+        os.remove('temp.png')
+    else:
+        print("The temp.png does not exist")
+        
+    if os.path.exists("rain.png"):
+        os.remove('rain.png')
+    else:
+        print("The rain.png does not exist")
+        
     
 if __name__ == "__main__":
     main()
-
+    
 
 
 
