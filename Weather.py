@@ -62,7 +62,7 @@ def getWeather(path):
 
         line12 = '\n'
         holy = line1+line2+line3+line5+line6+line7+line9+line10+line12
-        #print(holy)
+        print(holy)
         content.append(holy)
     
     report = ''.join(content).strip()
@@ -126,6 +126,7 @@ def send_email_via_email(
     
     sender_email = sender_credentials[0]
     email_password = sender_credentials[1]
+    
     ################################################################
     msg = MIMEMultipart()
     msg['Subject'] = subject
@@ -146,7 +147,7 @@ def send_email_via_email(
     part['Content-Disposition'] = 'attachment; filename="%s"' % basename("rain.png")
     msg.attach(part)
     
-    
+        
     with smtplib.SMTP_SSL(
         smtp_server, smtp_port, context=ssl.create_default_context()
     ) as email:
