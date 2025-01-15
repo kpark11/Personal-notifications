@@ -37,9 +37,9 @@ def  getMotivation():
         print("Quote: " + quote + '\n\n' + 'Author: ' + author)
         
         return "Quote: " + quote + '\n\n' + 'Author: ' + author
-    except ValueError:
+    except:
         print(f"Failed to retrieve the webpage. Status code: {response.status_code}")
-        return ""
+        return "Error"
 
     
 
@@ -99,13 +99,14 @@ def main():
 
     sender_credentials = get_credential()
     
-    try:
+    if message != 'Error':
         #Email
         send_email_via_email(receiver, message, sender_credentials,'Motivation')
         print('\n')
         print('Email Sent!')
-
-    except:
+    else:
+        #Email
+        send_email_via_email(receiver, message, sender_credentials,'Motivation (Error)')
         print('\n')
         print('error')        
     
