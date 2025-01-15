@@ -32,12 +32,12 @@ def getWeather(path):
         for i in range(20):        
             content_day = soup.find_all("div",{"data-testid":"DailyContent"})[i]
             line1 = '------------------------------------------------------' + '\n'
-            
+            # Date and time
             time = content_day.find('h2').text
             line2 = f'{time}\n'
             cont_day.append(time)
             
-            
+            # Temperature
             temp = content_day.find('span',{'data-testid':'TemperatureValue'}).text
             line3 = '------' + '\n'
             line5 = f'Temperature: {temp}'.format(temp=temp) + '\n'
@@ -45,9 +45,13 @@ def getWeather(path):
             temp_num = int(temp_num)
             cont_temp.append(temp_num)
             
-            precipitation = content_day.find('span',{'data-testid':'PercentageValue'}).text
+            # Precipitation
+            try:
+                precipitation = content_day.find('span',{'data-testid':'PercentageValue'}).text
+            except:
+                precipitation = '0%'
             line6 = '------' + '\n'
-            line7 = 'Precipitation percentage (if not, Wind): {precipitation}'.format(precipitation=precipitation) + '\n'
+            line7 = 'Precipitation percentage: {precipitation}'.format(precipitation=precipitation) + '\n'
             prec_num = precipitation[:-1]
             #print(precipitation)
             try:
@@ -57,12 +61,17 @@ def getWeather(path):
             
             cont_rain.append(prec_num)
             
+            # Wind
+            wind = content_day.find('span',{'data-testid':'Wind'}).text
+            line8 = '------' + '\n'
+            line9 = f'Wind: {wind}'.format(temp=temp) + '\n'
+            
             summary = content_day.find('p',{'data-testid':'wxPhrase'}).text
-            line9 = '------' + '\n'
-            line10 = 'Summary: {summary}'.format(summary=summary) + '\n'
+            line10 = '------' + '\n'
+            line11 = 'Summary: {summary}'.format(summary=summary) + '\n'
     
             line12 = '\n'
-            holy = line1+line2+line3+line5+line6+line7+line9+line10+line12
+            holy = line1+line2+line3+line5+line6+line7+line8+line9+line10+line11+line12
             print(holy)
             content.append(holy)
         
@@ -171,7 +180,7 @@ def main():
     receiver = "kimanpark33@gmail.com"
 
     sender_credentials = get_credential()
-    if message != 'Error':
+    if message != 'Error' and message1 != 'Error':
         #Email
         send_email_via_email(receiver, message, sender_credentials,'Knoxville TN Weather Report')
         print('\n')
