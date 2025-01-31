@@ -174,26 +174,42 @@ Hosch_path = "https://weather.com/weather/tenday/l/5045bdcbf6598772976f065c7b985
 
 def main():
     
-    message = getWeather(Knox_path)
-    message1 = getWeather(Hosch_path)
-
     receiver = "kimanpark33@gmail.com"
-
     sender_credentials = get_credential()
-    if message != 'Error' and message1 != 'Error':
+    
+    message = getWeather(Knox_path)
+    
+    if message != 'Error':
         #Email
         send_email_via_email(receiver, message, sender_credentials,'Knoxville TN Weather Report')
         print('\n')
         print('Knoxville Email Sent!')
-        send_email_via_email(receiver, message1, sender_credentials,'Hoschton GA Weather Report')
-        print('Hoschton Email Sent!')
-        print('\n')
     else:
         send_email_via_email(receiver, message, sender_credentials,'Knoxville TN Weather Report (Error)')
-        send_email_via_email(receiver, message1, sender_credentials,'Hoschton GA Weather Report (Error)')
         print('\n')
         print('Error!')
         
+    if os.path.exists("temp.png"):
+        os.remove('temp.png')
+    else:
+        print("The temp.png does not exist")
+        
+    if os.path.exists("rain.png"):
+        os.remove('rain.png')
+    else:
+        print("The rain.png does not exist")
+        
+    message = getWeather(Hosch_path)
+    
+    if message != 'Error':
+        #Email
+        send_email_via_email(receiver, message, sender_credentials,'Hoschton GA Weather Report')
+        print('Hoschton Email Sent!')
+        print('\n')
+    else:
+        send_email_via_email(receiver, message, sender_credentials,'Hoschton GA Weather Report (Error)')
+        print('\n')
+        print('Error!')
         
     if os.path.exists("temp.png"):
         os.remove('temp.png')
