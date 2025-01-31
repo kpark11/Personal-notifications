@@ -121,7 +121,16 @@ def get_credential():
     credential = parts.split(",")
     return credential
         
-
+def cleanDir():
+    if os.path.exists("temp.png"):
+        os.remove('temp.png')
+    else:
+        print("The temp.png does not exist")
+        
+    if os.path.exists("rain.png"):
+        os.remove('rain.png')
+    else:
+        print("The rain.png does not exist")
 
 def send_email_via_email(
     receiver: str,
@@ -189,15 +198,7 @@ def main():
         print('\n')
         print('Error!')
         
-    if os.path.exists("temp.png"):
-        os.remove('temp.png')
-    else:
-        print("The temp.png does not exist")
-        
-    if os.path.exists("rain.png"):
-        os.remove('rain.png')
-    else:
-        print("The rain.png does not exist")
+    cleanDir()
         
     message = getWeather(Hosch_path)
     
@@ -211,15 +212,7 @@ def main():
         print('\n')
         print('Error!')
         
-    if os.path.exists("temp.png"):
-        os.remove('temp.png')
-    else:
-        print("The temp.png does not exist")
-        
-    if os.path.exists("rain.png"):
-        os.remove('rain.png')
-    else:
-        print("The rain.png does not exist")
+    cleanDir()
         
     
 if __name__ == "__main__":
