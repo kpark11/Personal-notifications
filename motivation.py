@@ -92,7 +92,7 @@ def get_credential():
 
 
 def main():
-    
+     
     message = getMotivation()
 
     receiver = "kimanpark33@gmail.com"
